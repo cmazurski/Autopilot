@@ -271,10 +271,10 @@ namespace Programmable
 			// assume panel has been filled, otherwise something went horribly wrong
 
 			// get data
-			string[] splitByLine = panel.GetPublicText().Split(newLine, StringSplitOptions.RemoveEmptyEntries);
+			string[] splitByLine = panel.GetPrivateText().Split(newLine, StringSplitOptions.RemoveEmptyEntries);
 
 			// erase panel
-			panel.WritePublicText("");
+			panel.WritePrivateText("");
 
 			// build from data and invoke handler
 			for (int lineIndex = 0; lineIndex < splitByLine.Length; lineIndex++)
@@ -360,7 +360,7 @@ namespace Programmable
 		//	}
 
 		//	for (int index = 0; index < DebugPanels.Count; index++)
-		//		((IMyTextPanel)DebugPanels[index]).WritePublicText(line + '\n', append);
+		//		((IMyTextPanel)DebugPanels[index]).WritePrivateText(line + '\n', append);
 		//}
 
 		#endregion

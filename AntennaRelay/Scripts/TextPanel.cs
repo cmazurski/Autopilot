@@ -27,9 +27,9 @@ namespace Rynchodon.AntennaRelay
 		private const string command_forPlayer = "Display Detected";
 		private const string command_forProgram = "Transmit Detected to ";
 
-		private const string publicTitle_forPlayer = "Detected Grids";
-		private const string publicTitle_forProgram = "Transmission to Programmable block";
-		private const string publicTitle_fromProgramParsed = "Transmission from Programmable block";
+		private const string privateTitle_forPlayer = "Detected Grids";
+		private const string privateTitle_forProgram = "Transmission to Programmable block";
+		private const string privateTitle_fromProgramParsed = "Transmission from Programmable block";
 		private const string blockName_fromProgram = "from Program";
 
 		private const string radarIconId = "Radar";
@@ -106,8 +106,8 @@ namespace Rynchodon.AntennaRelay
 		{
 			try
 			{
-				string publicTitle = myTextPanel.GetPublicTitle();
-				if (publicTitle == publicTitle_forPlayer || publicTitle == publicTitle_fromProgramParsed)
+				string privateTitle = myTextPanel.GetPrivateTitle();
+				if (privateTitle == privateTitle_forPlayer || privateTitle == privateTitle_fromProgramParsed)
 					checkAge();
 
 				displayLastSeen();
@@ -198,7 +198,7 @@ namespace Rynchodon.AntennaRelay
 
 			if (instruction.looseContains(command_forProgram))
 			{
-				if (sentToProgram && myTextPanel.GetPublicTitle() == publicTitle_forProgram && !string.IsNullOrWhiteSpace(myTextPanel.GetPublicText()))
+				if (sentToProgram && myTextPanel.GetPrivateTitle() == privateTitle_forProgram && !string.IsNullOrWhiteSpace(myTextPanel.GetPrivateText()))
 				{
 					//myLogger.debugLog("public text is not clear", "displayLastSeen()");
 					runProgram();
@@ -255,14 +255,14 @@ namespace Rynchodon.AntennaRelay
 			string displayString = displayText.ToString();
 
 			myLogger.debugLog("writing to panel " + myTextPanel.DisplayNameText, "findTextPanel()", Logger.severity.TRACE);
-			myTextPanel.WritePublicText(displayText.ToString());
+			myTextPanel.WritePrivateText(displayText.ToString());
 
 			// set public title
 			if (forProgram)
 			{
-				if (myTextPanel.GetPublicTitle() != publicTitle_forProgram)
+				if (myTextPanel.GetPrivateTitle() != privateTitle_forProgram)
 				{
-					myTextPanel.WritePublicTitle(publicTitle_forProgram);
+					myTextPanel.WritePrivateTitle(privateTitle_forProgram);
 					myTextPanel.AddImageToSelection(radarIconId);
 					//myTextPanel.ShowTextureOnScreen();
 				}
@@ -270,9 +270,9 @@ namespace Rynchodon.AntennaRelay
 				runProgram();
 			}
 			else
-				if (myTextPanel.GetPublicTitle() != publicTitle_forPlayer)
+				if (myTextPanel.GetPrivateTitle() != privateTitle_forPlayer)
 				{
-					myTextPanel.WritePublicTitle(publicTitle_forPlayer);
+					myTextPanel.WritePrivateTitle(privateTitle_forPlayer);
 					myTextPanel.AddImageToSelection(radarIconId);
 					//myTextPanel.ShowTextureOnScreen();
 				}
@@ -334,8 +334,8 @@ namespace Rynchodon.AntennaRelay
 					//myLogger.debugLog("append OK", "replaceEntityIdsWithLastSeen()");
 				}
 			}
-			myTextPanel.WritePublicText(newText.ToString());
-			myTextPanel.WritePublicTitle(publicTitle_fromProgramParsed);
+			myTextPanel.WritePrivateText(newText.ToString());
+			myTextPanel.WritePrivateTitle(privateTitle_fromProgramParsed);
 		}
 
 		/// <summary>

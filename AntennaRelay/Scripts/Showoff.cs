@@ -78,7 +78,7 @@ namespace Rynchodon.AntennaRelay
 		//	}
 		//}
 
-		private const string publicTitle = "Grid found by Autopilot";
+		private const string privateTitle = "Grid found by Autopilot";
 		private const string radarId = "Radar";
 
 		private class sortableLastSeen : IComparable<sortableLastSeen>
@@ -202,10 +202,10 @@ namespace Rynchodon.AntennaRelay
 			foreach (Ingame.IMyTextPanel panel in textPanels)
 			{
 				log("writing to panel: " + panel.DisplayNameText, "findTextPanel()", Logger.severity.TRACE);
-				panel.WritePublicText(displayString);
-				if (panel.GetPublicTitle() != publicTitle)
+				panel.WritePrivateText(displayString);
+				if (panel.GetPrivateTitle() != privateTitle)
 				{
-					panel.WritePublicTitle(publicTitle);
+					panel.WritePrivateTitle(privateTitle);
 					panel.AddImageToSelection(radarId);
 					panel.ShowTextureOnScreen();
 				}

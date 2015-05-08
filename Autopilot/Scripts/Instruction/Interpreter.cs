@@ -349,7 +349,7 @@ namespace Rynchodon.Autopilot.Instruction
 				return false;
 			}
 
-			string panelText = panel.GetPublicText();
+			string panelText = panel.GetPrivateText();
 			string lowerText = panelText.ToLower();
 
 			string identifier;
