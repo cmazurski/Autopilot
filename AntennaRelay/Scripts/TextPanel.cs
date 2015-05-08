@@ -262,9 +262,10 @@ namespace Rynchodon.AntennaRelay
 			{
 				if (myTextPanel.GetPrivateTitle() != privateTitle_forProgram)
 				{
+					myTextPanel.ClearImagesFromSelection();
 					myTextPanel.WritePrivateTitle(privateTitle_forProgram);
 					myTextPanel.AddImageToSelection(radarIconId);
-					//myTextPanel.ShowTextureOnScreen();
+					myTextPanel.ShowTextureOnScreen();
 				}
 
 				runProgram();
@@ -272,9 +273,10 @@ namespace Rynchodon.AntennaRelay
 			else
 				if (myTextPanel.GetPrivateTitle() != privateTitle_forPlayer)
 				{
+					myTextPanel.ClearImagesFromSelection();
 					myTextPanel.WritePrivateTitle(privateTitle_forPlayer);
 					myTextPanel.AddImageToSelection(radarIconId);
-					//myTextPanel.ShowTextureOnScreen();
+					myTextPanel.ShowTextureOnScreen();
 				}
 		}
 
