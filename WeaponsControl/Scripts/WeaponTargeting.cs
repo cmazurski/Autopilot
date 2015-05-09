@@ -2,21 +2,60 @@
 
 using System;
 using System.Collections.Generic;
+using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI;
 using VRageMath;
+using Ingame = Sandbox.ModAPI.Ingame;
 
 namespace Rynchodon.Autopilot.Weapons
 {
-	public class TargetChecker
+	/// <summary>
+	/// Contains functions that are common to turrets and fixed weapons
+	/// </summary>
+	public class WeaponTargeting
 	{
+		#region Targeting Options
+
+		[Flags]
+		public enum TargetType : byte
+		{
+			None = 0x0,
+			Missile = 0x1,
+			Meteor = 0x2,
+			Character = 0x4,
+			Moving = 0x8,
+			LargeGrid = 0x10,
+			SmallGrid = 0x20,
+			Station = 0x40
+		}
+
+		public float Range;
+		public TargetType CanTarget = TargetType.None;
+
+		public bool CanTargetType(TargetType type)
+		{ return (CanTarget & type) > 0; }
+
+		#endregion
+
+		private readonly IMyCubeBlock weapon;
+		private readonly Ingame.IMyLargeTurretBase myTurret;
+
+		private Logger myLogger;
+
+		public WeaponTargeting(IMyCubeBlock weapon)
+		{
+			this.weapon = weapon;
+			this.myTurret = weapon as Ingame.IMyLargeTurretBase;
+			this.myLogger = new Logger("WeaponTargeting", () => weapon.CubeGrid.DisplayName, () => weapon.DisplayNameText);
+		}
+
 		/// <summary>
 		/// <para>Test line segment between weapon and target for obstructing entities.</para>
 		/// <para>Tests for obstructing voxel map, non-hostile character, or non-hostile grid.</para>
 		/// </summary>
-		/// <param name="weapon">weapon to check from</param>
 		/// <param name="targetPos">entity to shoot</param>
 		/// <param name="ignoreSourceGrid">ignore intersections with grid that weapon is part of</param>
-		public static bool CanShootAt(IMyCubeBlock weapon, Vector3D targetPos, bool ignoreSourceGrid = false)
+		public bool CanShootAt(Vector3D targetPos, bool ignoreSourceGrid = false)
 		{
 			if (weapon == null)
 				throw new ArgumentNullException("weapon");
@@ -72,30 +111,27 @@ namespace Rynchodon.Autopilot.Weapons
 		/// <summary>
 		/// Determines the direction a projectile must be fired in to hit the target.
 		/// </summary>
-		/// <param name="attacker">entity firing the shot</param>
 		/// <param name="target">target</param>
 		/// <param name="projectileSpeed">the speed of the projectile</param>
 		/// <returns>the required direction</returns>
-		public static Vector3? FiringDirection(IMyEntity attacker, IMyEntity target, float projectileSpeed)
+		/// Do we also need point of intersection? - This test might preceed CanShootAt, then we could test the trajectory not sight-to-target
+		public Vector3? FiringDirection(IMyEntity target, float projectileSpeed)
 		{
-			if (attacker == null)
+			if (weapon == null)
 				throw new ArgumentNullException("attacker");
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			//Vector3D attackerPos = attacker.GetPosition();
-			//Vector3D attackerVelocity = attacker.GetLinearVelocity();
-			
-			//Vector3D targetPos = target.GetPosition();
-			//Vector3D targetVelocity = target.GetLinearVelocity();
-
-			Vector3D relativePos = target.GetPosition() - attacker.GetPosition();
-			Vector3 relativeVelocity = target.GetLinearVelocity() - attacker.GetLinearVelocity();
+			Vector3D relativePos = target.GetPosition() - weapon.GetPosition();
+			Vector3 relativeVelocity = target.GetLinearVelocity() - weapon.GetLinearVelocity();
 
 			return FiringDirection(relativePos, relativeVelocity, projectileSpeed);
 		}
 
-		private static float? smallest_positive_root_of_quadratic_equation(float a, float b, float c)
+		/// <summary>
+		/// Gets the smallest positive root of the quadratic equation.
+		/// </summary>
+		private static float? SmallPositiveRoot(float a, float b, float c)
 		{
 			float sqrt = b * b - 4 * a * c;
 			if (sqrt < 0)
@@ -121,7 +157,7 @@ namespace Rynchodon.Autopilot.Weapons
 			float b = -2 * relativePosition.Dot(relativeVelocity);
 			float c = -relativePosition.LengthSquared();
 
-			float? time = smallest_positive_root_of_quadratic_equation(a, b, c);
+			float? time = SmallPositiveRoot(a, b, c);
 			if (time == null)
 				return null;
 

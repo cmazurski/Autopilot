@@ -24,25 +24,15 @@ namespace Rynchodon
 		[Flags]
 		public enum Relations : byte
 		{
-			/// <summary>
-			/// Owner/Player is "nobody"
-			/// </summary>
+			/// <summary>Owner/Player is "nobody"</summary>
 			None = 0,
-			/// <summary>
-			/// Owner/Player is a member of an at war faction
-			/// </summary>
+			/// <summary>Owner/Player is a member of an at war faction</summary>
 			Enemy = 1,
-			/// <summary>
-			/// Owner/Player is a member of an at peace faction
-			/// </summary>
+			/// <summary>Owner/Player is a member of an at peace faction</summary>
 			Neutral = 2,
-			/// <summary>
-			/// Owner/Player is a member of the same faction
-			/// </summary>
+			/// <summary>Owner/Player is a member of the same faction</summary>
 			Faction = 4,
-			/// <summary>
-			/// Owner/Player is the same player
-			/// </summary>
+			/// <summary>Owner/Player is the same player</summary>
 			Owner = 8
 		}
 
@@ -251,6 +241,7 @@ namespace Rynchodon
 		}
 
 
+		/// <summary>Combines the grid name and the block name</summary>
 		public static string gridBlockName(this IMyCubeBlock block)
 		{ return block.CubeGrid.DisplayName + "." + block.DisplayNameText; }
 
