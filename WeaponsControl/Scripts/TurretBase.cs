@@ -17,7 +17,7 @@ using VRageMath;
 
 using Rynchodon.AntennaRelay;
 
-namespace Rynchodon.Autopilot.Turret
+namespace Rynchodon.Autopilot.Weapons
 {
 	public class TurretLargeGatling : TurretBase
 	{

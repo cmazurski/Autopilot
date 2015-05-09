@@ -1,4 +1,6 @@
-﻿using Sandbox.ModAPI;
+﻿// skip file on build
+
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using VRageMath;
@@ -31,7 +33,10 @@ namespace Rynchodon
 			// Get entities in AABB
 			Vector3D[] points = { world.From, world.To };
 			BoundingBoxD AABB = BoundingBoxD.CreateFromPoints(points);
-			ICollection<IMyEntity> entitiesInAABB = MyAPIGateway.Entities.GetEntitiesInAABB_Safe(ref AABB);
+			ICollection<IMyEntity> entitiesInAABB;
+			HashSet<IMyEntity> entitiesInAABBHash = new HashSet<IMyEntity>();
+			MyAPIGateway.Entities.GetEntitiesInAABB_Safe_NoBlock(AABB, entitiesInAABBHash, collect);
+			entitiesInAABB = entitiesInAABBHash;
 
 			RayD worldRay = new RayD(world.From, world.Direction);
 
@@ -44,7 +49,7 @@ namespace Rynchodon
 					if (entity is IMyCubeBlock || !collect(entity))
 						continue;
 
-					sortedEntities.Add(sort(entity), entity);
+					sortedEntities.AddIncrement(sort(entity), entity);
 				}
 				entitiesInAABB = sortedEntities.Values;
 			}
@@ -86,7 +91,7 @@ namespace Rynchodon
 							}
 					}
 				}
-				else
+				else // not a grid
 				{
 					double tMin, tMax;
 					if (entity.WorldVolume.IntersectRaySphere(worldRay, out tMin, out tMax))

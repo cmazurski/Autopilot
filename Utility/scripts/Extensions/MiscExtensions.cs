@@ -239,6 +239,29 @@ namespace Rynchodon
 			return union.f;
 		}
 
+		[StructLayout(LayoutKind.Explicit)]
+		private struct DoubleLongUnion
+		{
+			[FieldOffset(0)]
+			public long l;
+			[FieldOffset(0)]
+			public double d;
+		}
+
+		public static double IncrementSignificand(this double number)
+		{
+			DoubleLongUnion union; union.l = 0; union.d = number;
+			union.l++;
+			return union.d;
+		}
+
+		public static double DecrementSignificand(this double number)
+		{
+			DoubleLongUnion union; union.l = 0; union.d = number;
+			union.l--;
+			return union.d;
+		}
+
 		#endregion
 
 		/// <summary>
@@ -266,6 +289,41 @@ namespace Rynchodon
 				&& first.WorldAABB.Intersects(second.WorldVolume)
 				&& first.WorldVolume.Intersects(second.WorldAABB)
 				&& first.WorldVolume.Intersects(second.WorldVolume);
+		}
+
+		/// <summary>
+		/// If the Dictionary does not contain key, add it. If the Dictionary does contain key, increment the siginificand and keep trying.
+		/// </summary>
+		/// <typeparam name="TValue">value type of toAdd</typeparam>
+		/// <param name="key">key to add</param>
+		/// <param name="value">value to add</param>
+		/// <param name="dictionary">dictionary to add to</param>
+		public static void AddIncrement<TValue>(this IDictionary<float, TValue> dictionary, float key, TValue value)
+		{
+			while (dictionary.ContainsKey(key))
+				key = key.IncrementSignificand();
+			dictionary.Add(key, value);
+		}
+
+		/// <summary>
+		/// If the Dictionary does not contain key, add it. If the Dictionary does contain key, increment the siginificand and keep trying.
+		/// </summary>
+		/// <typeparam name="TValue">value type of toAdd</typeparam>
+		/// <param name="key">key to add</param>
+		/// <param name="value">value to add</param>
+		/// <param name="dictionary">dictionary to add to</param>
+		public static void AddIncrement<TValue>(this IDictionary<double, TValue> dictionary, double key, TValue value)
+		{
+			while (dictionary.ContainsKey(key))
+				key = key.IncrementSignificand();
+			dictionary.Add(key, value);
+		}
+
+		public static Vector3 GetLinearVelocity(this IMyEntity entity)
+		{
+			if (entity.Physics == null)
+				return Vector3.Zero;
+			return entity.Physics.LinearVelocity;
 		}
 	}
 }

@@ -9,7 +9,7 @@ using Sandbox.Common;
 using Sandbox.ModAPI;
 using VRage;
 
-namespace Rynchodon.Autopilot.Turret
+namespace Rynchodon.Autopilot.Weapons
 {
 	//[Sandbox.Common.MySessionComponentDescriptor(Sandbox.Common.MyUpdateOrder.NoUpdate)]
 	public class TurretThread : MySessionComponentBase
